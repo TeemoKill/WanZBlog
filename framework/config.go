@@ -21,19 +21,19 @@ func (e *BlogEngine) loadConfig(autoReloadCallbackFn func(interface{})) (err err
 }
 
 // GenerateExampleConfig creates example configs and write to config file
-func (e *BlogEngine) generateExampleConfig() (err error) {
+func (e *BlogEngine) generateExampleConfig(filePath string) (err error) {
 	logger := log.CurrentModuleLogger()
 
-	err = os.WriteFile(constants.WanZBlogConfigFilePath, []byte(exampleConfig()), 0755)
+	err = os.WriteFile(filePath, []byte(exampleConfig()), 0755)
 	if err != nil {
 		logger.
 			WithError(err).
-			WithField("config_filename", constants.WanZBlogConfigFilePath).
+			WithField("config_filepath", filePath).
 			Errorf("failed to generate example config")
 		return err
 	}
 	logger.
-		WithField("config_filename", constants.WanZBlogConfigFilePath).
+		WithField("config_filepath", filePath).
 		Infof("Minimum configuration has been generated. Please modify as needed and rerun. " +
 			"For advanced configuration, please refer to the help documentation.")
 	return err
@@ -46,6 +46,7 @@ log_level = "info"
 listen_addr = "0.0.0.0:8080"
 gin_mode = "debug"
 server_shutdown_max_wait_seconds = 5
+sqlite_path = "./sqlite.db"
 
 `
 	// To solve the issue of incorrect line breaks when opening a file in Notepad on Windows

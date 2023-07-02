@@ -7,4 +7,7 @@ type Config struct {
 	ListenAddr                   string `toml:"listen_addr"`
 	GinMode                      string `toml:"gin_mode"`
 	ServerShutdownMaxWaitSeconds int    `toml:"server_shutdown_max_wait_seconds"`
+
+	// -------- Database --------
+	SqlitePath string `toml:"sqlite_path"`
 }

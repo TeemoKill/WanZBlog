@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/TeemoKill/WanZBlog/framework"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/TeemoKill/WanZBlog/framework"
 )
 
 func main() {

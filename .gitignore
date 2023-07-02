@@ -5,6 +5,9 @@
 # Config files
 wanzblog.toml
 
+# DB file
+sqlite.db
+
 # Binaries for programs and plugins
 WanZBlog
 *.exe

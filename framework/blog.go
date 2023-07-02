@@ -2,6 +2,8 @@ package framework
 
 import (
 	"context"
+	"database/sql"
+	"github.com/TeemoKill/WanZBlog/apirouter"
 	"net/http"
 	"os"
 	"time"
@@ -9,9 +11,6 @@ import (
 	"github.com/TeemoKill/WanZBlog/config"
 	"github.com/TeemoKill/WanZBlog/constants"
 	"github.com/TeemoKill/WanZBlog/log"
-	sentrygin "github.com/getsentry/sentry-go/gin"
-	"github.com/gin-contrib/pprof"
-	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
@@ -20,6 +19,7 @@ type BlogEngine struct {
 
 	Logger *logrus.Logger
 	Server *http.Server
+	Db     *sql.DB
 }
 
 func New() *BlogEngine {
@@ -34,7 +34,7 @@ func (e *BlogEngine) Init() (err error) {
 	case os.IsNotExist(err):
 		logger.WithField("config_filepath", constants.WanZBlogConfigFilePath).
 			Warnf("No configuration file detected, generating one. You can ignore this warning if it is the first time running.")
-		err = e.generateExampleConfig()
+		err = e.generateExampleConfig(constants.WanZBlogConfigFilePath)
 		if err != nil {
 			logger.WithError(err).
 				Errorf("failed to generate example config, exitting")
@@ -80,6 +80,13 @@ func (e *BlogEngine) Init() (err error) {
 	}
 	e.Logger = log.StandardLogger()
 
+	// init database
+	if err := e.connectDB(); err != nil {
+		logger.WithError(err).
+			Errorf("connect database error")
+		return err
+	}
+
 	// init router
 	e.InitHTTPServer()
 
@@ -87,22 +94,14 @@ func (e *BlogEngine) Init() (err error) {
 }
 
 func (e *BlogEngine) InitHTTPServer() {
-	gin.DisableConsoleColor()
-	gin.SetMode(e.Cfg.GinMode)
 
-	router := gin.New()
-	router.Use(sentrygin.New(sentrygin.Options{}))
-
-	pprof.Register(router)
-
-	// register router
-	router.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello World!")
-	})
+	apiRouter := apirouter.New(
+		e.Cfg, e.Db,
+	)
 
 	e.Server = &http.Server{
 		Addr:    e.Cfg.ListenAddr,
-		Handler: router,
+		Handler: apiRouter,
 	}
 }
 
@@ -131,5 +130,17 @@ func (e *BlogEngine) Stop() error {
 	}
 	e.Logger.Info("server exited")
 
-	return e.Server.Shutdown(ctx)
+	if err := e.Server.Shutdown(ctx); err != nil {
+		e.Logger.WithError(err).
+			Errorf("Shutdown http Server error")
+		return err
+	}
+
+	if err := e.Db.Close(); err != nil {
+		e.Logger.WithError(err).
+			Errorf("Close Sqlite connection error")
+		return err
+	}
+
+	return nil
 }

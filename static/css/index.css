@@ -1,0 +1,25 @@
+
+.header {
+    color: #833803;
+    font-family: Arial, sans-serif;
+}
+
+.block1 {
+    /*width: 200px;*/
+    height: 200px;
+    background: azure /*fixed*/;
+    color: chocolate;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    margin: 100px auto;
+}
+
+.block2 {
+    width: 200px;
+    height: 200px;
+    background: #abf6f6 fixed;
+    color: #793007;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    margin: 100px auto;
+}
