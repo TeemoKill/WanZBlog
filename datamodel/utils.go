@@ -9,5 +9,6 @@ type IDModelIntrinsic struct {
 func InitDataModel(dbConn *gorm.DB) {
 	_ = dbConn.AutoMigrate(&UUID{})
 
+	_ = dbConn.AutoMigrate(&User{})
 	_ = dbConn.AutoMigrate(&Article{})
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>register</title>
+    <link rel="stylesheet" href="static/css/register.css"/>
+    <!-- <script src="jquery-3.6.0.min.js"></script> -->
+    <script src="static/js/register.js"></script>
+</head>
+<body>
+<div id="register_div">
+    <div>
+        <input type="text" id="username" placeholder="username"/>
+        <div id="reg_username"></div>
+    </div>
+    <div>
+        <input type="text" id="email" placeholder="email"/>
+        <div id="reg_email"></div>
+    </div>
+    <div>
+        <input type="password" id="password" placeholder="password"/>
+        <div id="reg_password"></div>
+    </div>
+    <div id="btn_register">
+        <input type="button" value="register" onclick="postRegister();"/>
+    </div>
+</div>
+</body>

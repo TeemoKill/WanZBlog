@@ -1,7 +1,7 @@
 package apirouter
 
 import (
-	"database/sql"
+	"gorm.io/gorm"
 	"net/http"
 
 	"github.com/TeemoKill/WanZBlog/config"
@@ -17,13 +17,13 @@ type API interface {
 type APIRouter struct {
 	Cfg    *config.Config
 	router *gin.Engine
-	db *sql.DB
+	db     *gorm.DB
 }
 
-func New(cfg *config.Config, db *sql.DB) *APIRouter {
+func New(cfg *config.Config, db *gorm.DB) *APIRouter {
 	router := &APIRouter{
 		Cfg: cfg,
-		db: db,
+		db:  db,
 	}
 	router.init()
 
@@ -46,7 +46,10 @@ func (r *APIRouter) init() {
 
 	// register handlers
 	r.router.GET("/", r.indexHandler)
-	r.router.GET("/ping", r.pingHandler)
+	r.router.GET("/register", r.registerPageHandler)
+
+	r.router.GET("/api/ping", r.pingHandler)
+	r.router.POST("/api/register", r.registerHandler)
 
 }
 

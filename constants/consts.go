@@ -11,6 +11,10 @@ const (
 	WanZBlogConfigPath = "./"
 )
 
+const (
+	LoginTokenLength = 32
+)
+
 var (
 	WanZBlogConfigFilePath = path.Join(
 		WanZBlogConfigPath,

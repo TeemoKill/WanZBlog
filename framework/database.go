@@ -1,11 +1,11 @@
 package framework
 
 import (
-	"database/sql"
+	"os"
+
 	"github.com/TeemoKill/WanZBlog/constants"
 	"github.com/TeemoKill/WanZBlog/datamodel"
 	"github.com/TeemoKill/WanZBlog/log"
-	"os"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -19,13 +19,11 @@ func (e *BlogEngine) connectDB() error {
 	case os.IsNotExist(err):
 		logger.WithField("sqlite_path", e.Cfg.SqlitePath).
 			Warnf("Sqlite db file not exist")
-		err = e.initDB(e.Cfg.SqlitePath)
-		if err != nil {
+		if err := e.initDB(e.Cfg.SqlitePath); err != nil {
 			logger.WithError(err).
 				Errorf("failed to initialize database, exitting")
 			return err
 		}
-		return err
 	case err != nil:
 		logger.WithError(err).
 			WithField("sqlite_path", e.Cfg.SqlitePath).
@@ -40,13 +38,15 @@ func (e *BlogEngine) connectDB() error {
 			Infof("Detected sqlite db file")
 	}
 
-	sqliteConn, err := sql.Open("sqlite3", e.Cfg.SqlitePath)
+	gormDB, err := gorm.Open(
+		sqlite.Open(e.Cfg.SqlitePath),
+	)
 	if err != nil {
 		logger.WithError(err).
 			Errorf("Failed to open sqlite!")
 		return err
 	}
-	e.Db = sqliteConn
+	e.Db = gormDB
 
 	return nil
 }

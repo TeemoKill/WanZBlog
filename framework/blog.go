@@ -2,12 +2,12 @@ package framework
 
 import (
 	"context"
-	"database/sql"
-	"github.com/TeemoKill/WanZBlog/apirouter"
+	"gorm.io/gorm"
 	"net/http"
 	"os"
 	"time"
 
+	"github.com/TeemoKill/WanZBlog/apirouter"
 	"github.com/TeemoKill/WanZBlog/config"
 	"github.com/TeemoKill/WanZBlog/constants"
 	"github.com/TeemoKill/WanZBlog/log"
@@ -19,7 +19,7 @@ type BlogEngine struct {
 
 	Logger *logrus.Logger
 	Server *http.Server
-	Db     *sql.DB
+	Db     *gorm.DB
 }
 
 func New() *BlogEngine {
@@ -136,7 +136,12 @@ func (e *BlogEngine) Stop() error {
 		return err
 	}
 
-	if err := e.Db.Close(); err != nil {
+	dbConn, err := e.Db.DB()
+	if err != nil {
+		e.Logger.WithError(err).
+			Errorf("get gorm db connection for close error")
+	}
+	if err := dbConn.Close(); err != nil {
 		e.Logger.WithError(err).
 			Errorf("Close Sqlite connection error")
 		return err

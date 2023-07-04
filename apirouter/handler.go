@@ -6,10 +6,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type IndexResponse struct {
+	Title  string `json:"title"`
+	Header string `json:"header"`
+	Block1 string `json:"block1"`
+	Block2 string `json:"block2"`
+}
+
+type PingResponse struct {
+	Message string `json:"message"`
+}
+
 func (r *APIRouter) indexHandler(c *gin.Context) {
 	response := IndexResponse{
-		Title:   "_TITLE_",
-		Header:  "_HEADER_",
+		Title:  "_TITLE_",
+		Header: "_HEADER_",
 		Block1: "_BLOCK1_",
 		Block2: "_BLOCK2_",
 	}
