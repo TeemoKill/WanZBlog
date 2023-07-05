@@ -1,14 +1,10 @@
 package apirouter
 
 import (
-	"crypto/rand"
-	"encoding/hex"
-	"fmt"
 	"github.com/TeemoKill/WanZBlog/apirouter/requests"
 	"github.com/TeemoKill/WanZBlog/log"
 	"net/http"
 
-	"github.com/TeemoKill/WanZBlog/constants"
 	"github.com/TeemoKill/WanZBlog/datamodel"
 	"github.com/gin-gonic/gin"
 
@@ -63,7 +59,8 @@ func (r *APIRouter) registerHandler(c *gin.Context) {
 	user := &datamodel.User{
 		Email: request.Email,
 	}
-	if err := user.LoadByEmail(r.db); err != nil {
+	var userCount int64
+	if err := r.db.Model(user).Where("email=?", user.Email).Count(&userCount).Error; err != nil {
 		logger.WithError(err).Warn("fetch user info error")
 		c.JSON(http.StatusOK,
 			RegisterResultResponse{
@@ -73,16 +70,15 @@ func (r *APIRouter) registerHandler(c *gin.Context) {
 		)
 		return
 	}
-
-	if user.UUID != "" {
-		logger.WithField("email", request.Email).Warn("email already registered")
+	if userCount > 0 {
+		logger.WithField("email", request.Email).
+			Info("email has already registered")
 		c.JSON(http.StatusOK,
 			RegisterResultResponse{
 				Code:    1,
-				Message: fmt.Sprintf("email already registered: %s", request.Email),
+				Message: "email has already registered",
 			},
 		)
-		return
 	}
 
 	// TODO: verify email address
@@ -113,9 +109,9 @@ func (r *APIRouter) registerHandler(c *gin.Context) {
 		)
 	}
 
-	token, err := r.GenerateToken(newUser.UUID)
+	token, err := GenerateLoginToken(newUser.UUID)
 	if err != nil {
-		logger.WithError(err).Error("GenerateToken error")
+		logger.WithError(err).Error("GenerateLoginToken error")
 		c.JSON(http.StatusOK,
 			RegisterResultResponse{
 				Code:    1,
@@ -125,8 +121,8 @@ func (r *APIRouter) registerHandler(c *gin.Context) {
 	}
 
 	logger.WithField("token", token).
-		WithField("email", c.PostForm("email")).
-		WithField("username", c.PostForm("username")).
+		WithField("email", request.Email).
+		WithField("username", request.Username).
 		Info("register success")
 
 	c.JSON(http.StatusOK,
@@ -138,13 +134,4 @@ func (r *APIRouter) registerHandler(c *gin.Context) {
 		},
 	)
 
-}
-
-func (r *APIRouter) GenerateToken(userUUID string) (token string, err error) {
-	buffer := make([]byte, constants.LoginTokenLength)
-	if _, err := rand.Read(buffer); err != nil {
-		return "", err
-	}
-
-	return hex.EncodeToString(buffer), err
 }

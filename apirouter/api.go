@@ -47,9 +47,12 @@ func (r *APIRouter) init() {
 	// register handlers
 	r.router.GET("/", r.indexHandler)
 	r.router.GET("/register", r.registerPageHandler)
+	r.router.GET("/login", r.loginPageHandler)
+	r.router.GET("/user/:user_uuid", r.userProfileHandler)
 
 	r.router.GET("/api/ping", r.pingHandler)
 	r.router.POST("/api/register", r.registerHandler)
+	r.router.POST("/api/login", r.loginHandler)
 
 }
 

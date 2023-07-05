@@ -18,7 +18,7 @@ type PingResponse struct {
 }
 
 func (r *APIRouter) indexHandler(c *gin.Context) {
-	response := IndexResponse{
+	response := &IndexResponse{
 		Title:  "_TITLE_",
 		Header: "_HEADER_",
 		Block1: "_BLOCK1_",
@@ -28,13 +28,13 @@ func (r *APIRouter) indexHandler(c *gin.Context) {
 	c.HTML(
 		http.StatusOK,
 		"index.html",
-		&response,
+		response,
 	)
 }
 
 func (r *APIRouter) pingHandler(c *gin.Context) {
 	c.JSON(
 		http.StatusOK,
-		PingResponse{Message: "pong"},
+		&PingResponse{Message: "pong"},
 	)
 }

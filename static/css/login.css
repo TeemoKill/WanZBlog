@@ -5,7 +5,7 @@ body {
     padding: 0;
 }
 
-#register_div {
+#login_div {
     width: 300px;
     margin: 0 auto;
     padding: 20px;
@@ -15,23 +15,23 @@ body {
     margin-top: 100px;
 }
 
-#register_div div {
+#login_div div {
     margin-bottom: 15px;
 }
 
-#register_div input[type=text],
-#register_div input[type=password] {
+#login_div input[type=text],
+#login_div input[type=password] {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
-#register_div #btn_register {
+#login_div #btn_login {
     margin-top: 20px;
 }
 
-#register_div input[type=button] {
+#login_div input[type=button] {
     background-color: #007bfa;
     color: #fff;
     border: none;
@@ -41,13 +41,12 @@ body {
     width: 100%;
 }
 
-#register_div input[type=button]:hover {
+#login_div input[type=button]:hover {
     background-color: #0056b3;
 }
 
-#reg_username,
-#reg_email,
-#reg_password {
+#login_email,
+#login_password {
     color: red;
     font-size: 12px;
 }

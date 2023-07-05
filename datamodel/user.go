@@ -9,6 +9,7 @@ type User struct {
 	Email    string `gorm:"column:email;unique" json:"email"`
 	Password string `gorm:"column:password" json:"password"`
 	Username string `gorm:"column:username" json:"username"`
+	Bio      string `gorm:"column:bio;type:VARCHAR(300)" json:"bio"`
 
 	UUIDModel
 	TimestampModel
@@ -32,9 +33,9 @@ func (u *User) Create(db *gorm.DB) error {
 }
 
 func (u *User) LoadByUUID(db *gorm.DB) error {
-	return db.Model(u).Where("uuid=?", u.UUID).Find(u).Error
+	return db.Model(u).Where("uuid=?", u.UUID).First(u).Error
 }
 
 func (u *User) LoadByEmail(db *gorm.DB) error {
-	return db.Model(u).Where("email=?", u.Email).Find(u).Error
+	return db.Model(u).Where("email=?", u.Email).First(u).Error
 }

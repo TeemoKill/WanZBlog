@@ -1,0 +1,25 @@
+body {
+    background-color: #f7f7f7;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.error {
+    color: #333;
+}
+
+.error:not(:last-child) {
+    margin-bottom: 0.5em;
+    font-size: 100px;
+}
+
+.error:last-child {
+    font-size: 24px;
+}

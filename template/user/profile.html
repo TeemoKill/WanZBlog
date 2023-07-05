@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ .Username }}</title>
+    <link rel="stylesheet" href="/static/css/profile.css"/>
+</head>
+<body>
+<div class="container">
+    <div class="profile-img">
+        <img src="https://s3api.wanz.site/image/%E6%9F%B4%E9%83%A1%E7%8C%AB_%E5%90%8C%E5%BD%92%E9%B1%BC%E5%B0%BD.png" alt="Profile image">
+    </div>
+    <div class="profile-info">
+        <h2>{{ .Username }}</h2>
+        <p>Bio here...</p>
+    </div>
+    <div class="profile-posts">
+        <h3>Blog Posts</h3>
+        <!-- List of blog posts will go here, each with its own html-->
+        <!-- Example: -->
+        <div class="post">
+            <h4>Post Title</h4>
+            <p>Post content...</p>
+        </div>
+        <!-- End of example -->
+    </div>
+</div>
+</body>
+</html>
